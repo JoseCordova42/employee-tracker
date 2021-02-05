@@ -91,13 +91,64 @@ const viewRoles = () => {
         });
 };
 
+const addEmp = () => {
+    inquirer.prompt([
+        {
+            message: "What is the employee's first name?",
+            name: 'firstName',
+            type: 'input'
+        },
+        {
+            message: "What is the employee's last name?",
+            name: 'lastName',
+            type: 'input'
+        },
+        {
+            message: "What is the employee's role ID? (1-Lawyer, 2-Paralegal, 3-Accountant, 4-HR Manager, 5-Secretary, 6-Sales Lead, 7-Salesman)",
+            name: 'title',
+            type: 'list',
+            choices: ['1', '2', '3', '4', '5', '6', '7']
+        },
+        {
+            message: "Who is their manager? (1-Saul Goodman, 3-Skyler White, 4-Gus Fring, 6-Walter White)",
+            name: 'manager',
+            type: 'list',
+            choices: ['1', '3', '4', '6']
+        }
+    ]).then(answer => {
+        connection.query(
+            `Insert INTO employee (first_name, last_name, role_id) Values ('${answer.firstName}', '${answer.lastName}', ${answer.title})`, 
+            (err, res) => {
+                if (err) throw err;
+                start();
+            });    
+    })
+};
+
+const remEmp = () => {
+    inquirer.prompt([
+        {
+            message: "What is the employee's ID?",
+            name: 'empId',
+            type: 'input'
+        }
+    ]).then(answer => {
+        connection.query(
+            `DELETE FROM employee WHERE id = ${answer.empId}`, 
+            (err, res) => {
+                if (err) throw err;
+                start();
+            });
+    })
+};
+
 const start = () => {
     console.log('Welcome to the Employee Tracker!\n')
     inquirer.prompt({
         message: 'What would you like to do?',
         name: 'mainQ',
         type: 'list',
-        choices: ['View all employees', 'View by department', 'View Departments', 'View Roles', 'Exit']
+        choices: ['View all employees', 'Add Employee', 'Remove Employee', 'View by department', 'View Departments', 'View Roles', 'Exit']
     }).then(answer => {
         // console.log(answer.mainQ);
         switch (answer.mainQ) {
@@ -107,6 +158,12 @@ const start = () => {
                 break;
             case 'View all employees':
                 viewEmployees();
+                break;
+            case 'Add Employee':
+                addEmp();
+                break;
+            case 'Remove Employee':
+                remEmp();
                 break;
             case 'View by department':
                 viewByDept();
