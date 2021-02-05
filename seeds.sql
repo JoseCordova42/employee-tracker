@@ -1,6 +1,6 @@
 use work_place_db;
 
-insert into department (name)
+insert into department (department)
 values ("Legal"), ("Accounting"), ("HR"), ("Sales");
 
 insert into role (title, salary, department_id)

@@ -2,7 +2,7 @@ use work_place_db;
 
 create table department (
 	id int not null auto_increment primary key,
-    name varchar(30) not null
+    department varchar(30) not null
 );
 
 create table role (
