@@ -10,22 +10,24 @@ const connection = mysql.createConnection({
     database: 'work_place_db',
 });
 
+//------Views All Employees------
 const viewEmployees = () => {
     connection.query(
-    'SELECT employee.id, first_name, last_name, title, department, salary\
-    FROM work_place_db.department\
-    JOIN work_place_db.role\
-    ON department.id = role.department_id\
-    JOIN work_place_db.employee\
-    ON role.id = employee.role_id', 
-    (err, res) => {
-        if (err) throw err;
-        console.log('\nAll Employees\n');
-        console.table(res);
-        start();
+        'SELECT employee.id, first_name, last_name, title, department, salary\
+        FROM work_place_db.department\
+        JOIN work_place_db.role\
+        ON department.id = role.department_id\
+        JOIN work_place_db.employee\
+        ON role.id = employee.role_id', 
+        (err, res) => {
+            if (err) throw err;
+            console.log('\nAll Employees\n');
+            console.table(res);
+            start();
     });
 };
 
+//------View BY department------
 const viewByDept = () => {
     inquirer.prompt({
         message: 'Which department would you like to view by?',
@@ -33,42 +35,41 @@ const viewByDept = () => {
         type: 'list',
         choices: ['Legal', 'Accounting', 'HR', 'Sales']
     }).then(answer => {
-        const viewBy = (something) => {
+        const viewBy = () => {
             connection.query(
-            'SELECT employee.id, first_name, last_name, title, department, salary\
-            FROM work_place_db.department\
-            JOIN work_place_db.role\
-            ON department.id = role.department_id\
-            JOIN work_place_db.employee\
-            ON role.id = employee.role_id WHERE department = ?',
-            {
-                department: something,
-            },
-            (err, res) => {
-                if (err) throw err;
-                console.log(`\nEmployees in ${something}\n`);
-                console.table(res);
-                start();
+                `SELECT employee.id, first_name, last_name, title, department, salary\
+                FROM work_place_db.department\
+                JOIN work_place_db.role\
+                ON department.id = role.department_id\
+                JOIN work_place_db.employee\
+                ON role.id = employee.role_id\
+                WHERE department = "${answer.deptQ}"`,
+                (err, res) => {
+                    if (err) throw err;
+                    console.log(`\nEmployees in ${answer.deptQ}\n`);
+                    console.table(res);
+                    start();
             });
         };
 
         switch (answer.deptQ) {
             case 'Legal':
-                viewBy(answer.deptQ);
+                viewBy();
                 break;
             case 'Accounting':
-                viewBy(answer.deptQ);
+                viewBy();
                 break;
             case 'HR':
-                viewBy(answer.deptQ);
+                viewBy();
                 break;
             case 'Sales':
-                viewBy(answer.deptQ);
+                viewBy();
                 break;
         }
     });
 };
 
+//------Views departments------
 const viewDepartments = () => {
     connection.query(
         'SELECT * FROM work_place_db.department', 
@@ -80,6 +81,7 @@ const viewDepartments = () => {
         });
 };
 
+//------Views Roles------
 const viewRoles = () => {
     connection.query(
         'SELECT id, title, salary FROM work_place_db.role', 
@@ -91,6 +93,7 @@ const viewRoles = () => {
         });
 };
 
+//------Adds Employees------
 const addEmp = () => {
     inquirer.prompt([
         {
@@ -125,6 +128,7 @@ const addEmp = () => {
     })
 };
 
+//------Removes Employees------
 const remEmp = () => {
     inquirer.prompt([
         {
@@ -142,6 +146,7 @@ const remEmp = () => {
     })
 };
 
+//------"Home Screen" of application------
 const start = () => {
     console.log('Welcome to the Employee Tracker!\n')
     inquirer.prompt({
@@ -150,7 +155,6 @@ const start = () => {
         type: 'list',
         choices: ['View all employees', 'Add Employee', 'Remove Employee', 'View by department', 'View Departments', 'View Roles', 'Exit']
     }).then(answer => {
-        // console.log(answer.mainQ);
         switch (answer.mainQ) {
             case 'Exit':
                 console.log('\nHave a nice day!\n');
