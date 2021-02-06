@@ -95,7 +95,6 @@ const viewRoles = () => {
 
 //------Adds Employees------
 const addEmp = () => {
-    viewEmployees();
     inquirer.prompt([
         {
             message: "What is the employee's first name?",
@@ -147,6 +146,7 @@ const remEmp = () => {
     })
 };
 
+//------Adds Departments------
 const addDept = () => {
     inquirer.prompt({
         message: 'What is the name of the new department?',
@@ -161,6 +161,7 @@ const addDept = () => {
     })
 };
 
+//------Adds Roles------
 const addRole = () => {
     inquirer.prompt([
         {
