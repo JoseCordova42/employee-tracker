@@ -95,6 +95,7 @@ const viewRoles = () => {
 
 //------Adds Employees------
 const addEmp = () => {
+    viewEmployees();
     inquirer.prompt([
         {
             message: "What is the employee's first name?",
@@ -146,6 +147,46 @@ const remEmp = () => {
     })
 };
 
+const addDept = () => {
+    inquirer.prompt({
+        message: 'What is the name of the new department?',
+        name: 'newName',
+        type: 'input'
+    }).then(answer => {
+        connection.query(`INSERT INTO department (department) VALUES ('${answer.newName}')`,
+        (err, res) => {
+            if (err) throw err;
+            start();
+        })
+    })
+};
+
+const addRole = () => {
+    inquirer.prompt([
+        {
+            message: 'What is the name of the new role?',
+            name: 'newRole',
+            type: 'input'
+        },
+        {
+            message: 'What is the new role\'s salary?',
+            name: 'newSal',
+            type: 'input'
+        },
+        {
+            message: 'What is the new role\'s department id?',
+            name: 'newDeptId',
+            type: 'input'
+        }
+    ]).then(answer => {
+        connection.query(`INSERT INTO role (title, salary, department_id) VALUES ('${answer.newRole}', '${answer.newSal}', '${answer.newDeptId}')`,
+        (err, res) => {
+            if (err) throw err;
+            start();
+        })
+    })
+};
+
 //------"Home Screen" of application------
 const start = () => {
     console.log('Welcome to the Employee Tracker!\n')
@@ -153,7 +194,7 @@ const start = () => {
         message: 'What would you like to do?',
         name: 'mainQ',
         type: 'list',
-        choices: ['View all employees', 'Add Employee', 'Remove Employee', 'View by department', 'View Departments', 'View Roles', 'Exit']
+        choices: ['View all employees', 'Add Employee', 'Remove Employee', 'View by department', 'View Departments', 'Add Department', 'View Roles', 'Add Role', 'Exit']
     }).then(answer => {
         switch (answer.mainQ) {
             case 'Exit':
@@ -174,6 +215,12 @@ const start = () => {
                 break;
             case 'View Departments':
                 viewDepartments();
+                break;
+            case 'Add Department':
+                addDept();
+                break;
+            case 'Add Role':
+                addRole();
                 break;
             case 'View Roles':
                 viewRoles();
